@@ -1,0 +1,26 @@
+import numpy as np
+
+def calcGini(feature, label, index):
+    '''
+    计算基尼系数
+    :param feature:测试用例中字典里的feature，类型为ndarray
+    :param label:测试用例中字典里的label，类型为ndarray
+    :param index:测试用例中字典里的index，即feature部分特征列的索引。该索引指的是feature中第几个特征，如index:0表示使用第一个特征来计算信息增益。
+    :return:基尼系数，类型float
+    '''
+
+    #********* Begin *********#
+    def _gini(label):
+        unique_label = list(set(label))
+        gini = 1
+        for l in unique_label:
+            p = np.sum(label == l)/len(label)
+            gini -= p**2
+        return gini
+    unique_value = list(set(feature[:, index]))
+    gini = 0
+    for value in unique_value:
+        len_v = np.sum(feature[:, index] == value)
+        gini += (len_v/len(feature))*_gini(label[feature[:, index] == value])
+    return gini
+    #********* End *********#

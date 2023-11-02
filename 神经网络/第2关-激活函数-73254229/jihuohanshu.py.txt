@@ -1,0 +1,38 @@
+import torch
+from torch.autograd import Variable
+import torch.nn.functional as F
+
+x = torch.linspace(-5, 5, 200)   # 构造一段连续的数据
+x = Variable(x) 
+
+########## Begin ##########
+
+print("y_sigmoid:")
+y_sigmoid = torch.sigmoid(x)
+print(y_sigmoid)
+
+print("y_tanh:")
+y_tanh = torch.tanh(x) 
+print(y_tanh)
+
+print("y_relu:")
+y_relu = torch.relu(x) 
+print(y_relu)
+
+print("y_softplus:")
+y_softplus = F.softplus(x) 
+print(y_softplus)
+
+print("y_leakyrelu:")
+y_leakyrelu = F.leaky_relu(x) 
+print(y_leakyrelu)
+
+print("y_ELU:")
+y_ELU = F.elu(x) 
+print(y_ELU)
+
+print("y_SELU:")
+y_SELU = torch.selu(x) 
+print(y_SELU)
+
+########## End ##########

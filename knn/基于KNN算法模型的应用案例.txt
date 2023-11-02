@@ -1,0 +1,105 @@
+任务描述
+相关知识
+对数据集进行分析
+划分训练集和测试集
+使用KNN算法建立模型
+使用建立好的模型对新样本的分类进行预测
+编程要求
+测试说明
+任务描述
+本关任务：了解并掌握KNN算法在实际案例中的应用。
+
+相关知识
+在上个关卡中我们介绍了KNN算法模型的原理以及如何建立KNN算法模型，接下来我们用一个来自真实世界的数据集来进行K最邻算法的实践：KNN算法——酒的分类。
+
+对数据集进行分析
+首先我们需要把酒的数据集导入到我们的项目中
+
+from sklearn.datasets import load_wine  # 载入酒的数据集模块
+# 导入酒的数据
+wine_dataset = load_wine() 
+这个酒的数据集中包含以下内容：
+
+数据：data
+目标分类：target
+目标分类名称：target_names
+数据描述：DESCR
+特征变量：features_names
+我们打印一下DESCR，部分内容显示如下：
+
+:Number of Instances: 178 (50 in each of three classes)
+:Number of Attributes: 13 numeric, predictive attributes and the class
+:Attribute Information:
+    - Alcohol
+    - Malic acid
+    - Ash
+    - Alcalinity of ash  
+    - Magnesium
+    - Total phenols
+    - Flavanoids
+    - Nonflavanoid phenols
+    - Proanthocyanins
+    - Color intensity
+    - Hue
+    - OD280/OD315 of diluted wines
+    - Proline
+- class:
+    - class_0
+    - class_1
+    - class_2
+通过打印DESCR，我们可以发现，酒的数据集中一共有178个样本，每条数据有13给特征变量。并且这178个样本被归入3个类别中：class_0、class_1、class_2，而这13个特征变量分别包括酒精含量、苹果酸、镁含量等等。
+
+划分训练集和测试集
+对于模型而言，它好坏一定程度上与它的数据集有关，不同的划分将导致不同的训练/测试集，模型评估的结果也有差别。那么该如何去划分数据集呢，在scikit-learn中，有个叫train_test_split的函数，它是用来帮助用户把数据集拆分的工具。其工作原理是：train_test_split函数将数据集进行随机排序，默认值是将其中百分之75的数据及所对应的标签划分归到训练数据集，并将取余百分之25的数据和所对应的标签划分到测试集中。
+
+# 分类训练集和测试集
+# X_train，y_train 训练集
+# X_test,y_test 测试集
+X_train, X_test, y_train, y_test = train_test_split(train_data, train_target, test_size=0.3, random_state=5)
+参数解释：
+  train_data：待划分样本数据
+  train_target：待划分样本数据的结果（标签）
+  test_size：测试数据占样本数据的比例，若整数则样本数量
+  random_state：设置随机数种子，保证每次都是同一个随机数。若为0或不填，则每次得到数据都不一样 
+一般大写的 X 表示数据的特征，小写的y表示数据对应的标签。X是一个二维数组，也称为矩阵，y是一个一维数组，也可以说是一个向量。
+
+使用KNN算法建立模型
+划分好训练集和测试集后，就可以开始建立我们的模型。
+
+# 导入KNN算法
+from sklearn.neighbors import KNeighborsClassifier
+# 指定模型的n_neighbors值，也就是最邻近数
+clf = KNeighborsClassifier(n_neighbors=3) 
+接下来我们要对数据使用拟合的方法来建立我们的模型，拟合的对象就是训练集的样本数据X_train和其对应的标签y_train，
+
+lr = clf.fit(x_train, y_train) 
+使用建立好的模型对新样本的分类进行预测
+在对新数据进行分类时，我们先来查看一下模型的准确率（评分），模型评分越高，也就是说模型预测的越准确，满分是1.0。
+
+# 把 测试集 放入 用训练集拟合出来的结果（clf），得到模型的准确率
+print("模型准确率：{:.2f}".format(clf.score(X_test, y_test))) 
+输出：
+
+模型准确率：0.71 
+我们看到，这个模型在预测测试集时得分并不高，只有0.71，也就是说，模型对新的数据做出正确分类的概率只有百分之71，这有点差强人意，不过这只是用来演示KNN算法在实际案例中的应用，所以不需要太过于纠结它，但是在真正做项目的时候，我们可以考虑通过调试KNN算法的K值来提高我们模型的准确率。
+现在让我们用建立好的模型对新的数据进行预测吧。假设我们有一瓶新酒，把新酒的特征变量代入到模型中。
+
+# 新酒数据
+da = np.array([[12.1, 2.1, 2.1, 19.3, 98.0, 1.2, 2.5, 0.5, 1.4, 6.0, 1.05, 3.3, 821]])
+# 进行预测
+predict_1 = clf.predict(da)
+# 观察预测结果是哪一类
+print(wine_dataset["target_names"][predict_1])
+ 
+输出：
+
+['class_2'] 
+我们可以看到模型把新酒划分到 class_2 这一类当中，虽然它的准确率只有百分之71（有百分之29的概率划分错误）。
+
+编程要求
+根据提示，在右侧编辑器补充代码，完成对应任务。
+
+测试说明
+平台会对你编写的代码进行测试：当你的结果与预期输出一致时，即为通过。
+
+开始你的任务吧，祝你成功！

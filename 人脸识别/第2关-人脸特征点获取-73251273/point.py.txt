@@ -1,0 +1,22 @@
+import face_recognition
+'''****************BEGIN****************'''
+# 获取人脸特征点
+image = face_recognition.load_image_file("./step2/image/laugh.jpg")
+face_landmarks_list = face_recognition.face_landmarks(image)
+print(face_landmarks_list)
+'''**************** END ****************'''
+
+import cv2
+
+# 绘制人脸特征点
+for face_landmarks in face_landmarks_list:
+    '''****************BEGIN****************'''
+    for facial_feature in face_landmarks.keys():
+        for pt_pos in face_landmarks[facial_feature]:
+                cv2.circle(image, pt_pos, 1, (255, 0, 0), 2)
+
+    '''**************** END ****************'''
+
+# 保存图片
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+cv2.imwrite("./step2/out/laugh.jpg", image_rgb)

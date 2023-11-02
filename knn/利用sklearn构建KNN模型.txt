@@ -1,0 +1,74 @@
+任务描述
+相关知识
+KNN算法的原理
+KNN算法的使用
+编程要求
+测试说明
+任务描述
+本关任务：学会如何使用sklearn构建KNN模型。
+
+相关知识
+为了完成本关任务，你需要掌握：1.KNN算法的原理，2.KNN算法的使用。
+
+KNN算法的原理
+KNN算法的原理其实就是：新数据点离谁最近，就和谁属于同一类。
+ 图1 
+                                            图1
+如图1所示，平面上有三大类分别为：w1、w2、w3，还有一个新数据点Xu，新数据点Xu最近的一个点为w1类的点(也就是红色的点)，理所应当地，Xu属于w1类。看起来，KNN算法真是够简单的，这么轻松就完成了分类工作。但是，刚才只是一个最简单的例子，选最近邻数等于一。我们如果在训练模型时让最近邻数等于1的话，可能会导致模型达不到指定的效果，为什么呢？试想一下，万一和新数据点最近的数据恰好是一个测量错误的点呢？如图2所示。
+图2
+                                        图2
+当我们最近邻数为1时，中间的问号数据点（新数据点）属于红色类，而当最近邻数设为5时，也就是找出离新数据点最近的5个点，我们可以看到离新数据点最近的蓝色有3个点，红色是2个点，那么KNN算法就会把新数据点划分到蓝色类。
+以上就是KNN算法的基本原理，实际上K这个字母的含义就是近邻个数。在scikit-learn中，KNN算法的K值是通过n_neighbors参数来调试的，默认值是5，我们可以通过设置K值来提高我们模型的准确率。
+
+KNN算法的使用
+KNN算法在python中的代码如下：
+
+from sklearn.datasets import make_blobs  # 数据集生成器
+from sklearn.neighbors import KNeighborsClassifier  # KNN分类器
+import matplotlib.pyplot as plt  # 画图工具
+from sklearn.model_selection import train_test_split  # 数据集拆分工具
+import numpy as np
+# 生成数据，并自动分类
+# （比如某一类别设定为红色，则会把所有红色类别的都集中在一起）
+# centers 分类数（centers=2生成两个类别，分成是 0 和 1 类）
+data = make_blobs(n_samples=200, centers=2, random_state=8)
+x, y = data  # x为样本数据集（图中坐标），y为类别（图中上下两个类）
+# print(x)
+# print(y)
+# 建立KNN算法模型并对数据集进行拟合
+clf = KNeighborsClassifier().fit(x, y)
+# 用于画图（方便这个函数pcolormesh的使用）
+x_min, x_max = x[:, 0].min() - 1, x[:, 0].max() + 1
+y_min, y_max = x[:, 1].min() - 1, x[:, 1].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, .02), np.arange(y_min, y_max, .02))
+# print(xx)
+z = clf.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+# ravel()将多维数组降位为一维数组
+# np.r_ 是按列连接两个矩阵，就是把两矩阵上下拼接，要求列数相等（与vstack用法一样）
+# np.c_ 是按行连接两个矩阵，就是把两矩阵左右拼接，要求行数相等（与hstack用法一样）
+# 画图
+plt.pcolormesh(xx, yy, z, cmap=plt.cm.spring)  # 区域划分（根据样本不同分类的颜色划分不同区域）
+plt.scatter(x[:, 0], x[:, 1], c=y, cmap=plt.cm.spring)
+plt.xlim(xx.min(), xx.max())
+plt.ylim(yy.min(), yy.max())
+plt.scatter(6, 4.8, marker="*", s=500)  # 设置一个点判断归属哪一类
+print("模型评估：{:.2f}".format(clf.score(x, y)))
+print(clf.predict([[6, 4.8]]))  # 黄色为[1]，紫色为[0]
+# 显示
+plt.show()
+ 
+输出：
+
+模型评估：1.00
+[1]
+图：
+图3
+我们可以看到，模型的准确率竟然是满分，这是因为我们把用作建立模型的训练集当成测试集对模型进行评估。KNN算法把新数据点（蓝色的星星）划分到黄色类中。
+
+编程要求
+根据提示，在右侧编辑器补充代码，完成相应要求。
+
+测试说明
+平台会对你编写的代码进行测试：当你的结果与预期输出一致时，即为通过。
+
+开始你的任务吧，祝你成功！

@@ -1,0 +1,24 @@
+from math import log
+def calc_shannonent(dataset):
+    """
+    :param dataset: 需要计算信息熵的数据
+    :return: 返回该数据的类别信息熵
+    """
+    # ********** Begin ********** #
+    n = len(dataset)  # 数据集长度
+    shannonent = 0.0  # 初始化信息熵
+    label_counts = {}  # 标签与个数的映射， 形式：{'是':9, '否':6}
+    # 遍历数据集，找到所有的标签，以及属于此标签的行数
+    for data in dataset:
+        label = data[-1]  # 每行最后一列的值为标签
+        if label not in label_counts:  # 如果此标签未出现过
+            label_counts[label] = 1  # 计数初始化为1
+        else:
+            label_counts[label] += 1  # 否则加1
+    for key in label_counts:
+        p = float(label_counts[key] / n)  # 计算概率，属于此标签的数据占总数据的比例
+        shannonent -= p * log(p, 2)  # 计算信息熵
+    return shannonent
+
+    
+    # ********** End ********** #

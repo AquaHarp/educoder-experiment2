@@ -1,0 +1,45 @@
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.datasets import load_wine, load_boston
+from sklearn.model_selection import train_test_split
+import numpy as np
+np.random.seed(10)
+
+def model_train(x_train, y_train, task="classifier"):
+    """
+    :param x_train: 训练集特征
+    :param y_train: 训练集目标值
+    :param task: 任务类别，取值classifier时，进行分类任务，取值regressor时，进行回归任务，
+    :return: 返回分类模型或者回归模型
+    """
+    # ********** Begin ********** #
+    if task == "classifier":
+        tool = DecisionTreeClassifier()
+    elif task == "regressor":
+        tool = DecisionTreeRegressor()
+    else:
+        return None
+    model = tool.fit(x_train, y_train)
+    return model
+    # ********* End ********* #
+
+
+def model_score(x_test, y_test, model):
+    return model.score(x_test, y_test)
+
+
+if __name__ == '__main__':
+    wine = load_wine()
+    boston = load_boston()
+
+    x_train, x_test, y_train, y_test = train_test_split(wine.data, wine.target, test_size=0.2)
+    model = model_train(x_train, y_train, task="classifier")
+    score1 = model_score(x_test, y_test, model)
+    x_train, x_test, y_train, y_test = train_test_split(boston.data, boston.target, test_size=0.2)
+    model = model_train(x_train, y_train, task="regressor")
+    score2 = model_score(x_test, y_test, model)
+
+    if score1 >= 0.75 and score2 >= 0.75:
+        print("测试通过")
+    else:
+        print("测试失败")

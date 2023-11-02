@@ -1,0 +1,27 @@
+import torch.nn as nn
+import torch.optim
+import torch
+from torch.autograd import Variable
+
+
+# 线性回归模型定义
+class LinearRegression(nn.Module):
+    def __init__(self):
+        super(LinearRegression, self).__init__()
+        self.linear = nn.Linear(2, 3)
+    def forward(self, x):
+        out = self.linear(x)
+        return out
+        
+model = LinearRegression()
+
+# 声明一个 SGD 优化器 optimizer， 按要求设置 lr 和momentum 的值
+
+########## Begin ##########
+optimizer = torch.optim.SGD(model.parameters(), lr=0.000001, momentum=0.9)
+optimizer.zero_grad()
+optimizer.step()
+########## End ##########
+
+# 输出optimizer内容
+print(optimizer)
